@@ -1,4 +1,4 @@
-const mongoose = require('mongoose'); 
+const mongoose = require('mongoose');
 
 var userSchema = new mongoose.Schema({
     name:{
@@ -21,6 +21,11 @@ var userSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
+    image:{
+        type: String,
+        require: true,
+        default: ''
+    }
 });
 
 //Export the model
