@@ -3,22 +3,28 @@ const postModel = require("../models/post.model");
 const { decrypted } = require("../plugins/cryptography");
 
 const createPost = async (req, res) => {
-  const { title, content } = req.body;
+  const body = req.body;
 
   const hash = { iv: req.headers.iv, content: req.headers.content };
 
   const userId = decrypted(hash);
 
   const newPost = new postModel({
-    title: title,
-    content: content,
+    title: body.title,
+    content: body.content,
     user: userId,
   });
-  try {
-    await newPost.save();
-    res.status(201).json(`A new user with Id ${newPost._id} is created!`);
-  } catch (error) {
-    res.status(409).json({ message: error.message });
+  if (userId) {
+    try {
+      await newPost.save();
+      res.status(201).json(`A new user with Id ${newPost._id} is created!`);
+    } catch (error) {
+      res.status(409).json({ message: error.message });
+    }
+  } else {
+    res
+      .status(409)
+      .json({ message: "Your request is not allow for unauthentication!" });
   }
 };
 
