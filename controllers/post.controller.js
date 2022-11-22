@@ -4,7 +4,6 @@ const postModel = require("../models/post.model");
 const { decrypted } = require("../plugins/cryptography");
 const { getHash } = require("../plugins/jwtauthorization");
 
-
 const createPost = async (req, res) => {
   const body = req.body;
   const authorization = req.headers.authorization;
@@ -13,8 +12,7 @@ const createPost = async (req, res) => {
   const userId = decrypted(hash);
 
   const newPost = new postModel({
-    title: body.title,
-    content: body.content,
+    ...body,
     user: userId,
   });
   if (userId) {
@@ -39,7 +37,7 @@ const getPosts = async (req, res) => {
   const userId = decrypted(hash);
 
   const posts = await postModel.find({ user: userId });
-  console.log("Number of post:",posts.length);
+  console.log("Number of post:", posts.length);
 
   try {
     res.status(200).json(posts);
