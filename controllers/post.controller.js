@@ -1,11 +1,14 @@
 // const { v4: uuidv4 } = require("uuid");
+const jwt = require("jsonwebtoken");
 const postModel = require("../models/post.model");
 const { decrypted } = require("../plugins/cryptography");
+const { getHash } = require("../plugins/jwtauthorization");
+
 
 const createPost = async (req, res) => {
   const body = req.body;
-
-  const hash = { iv: req.headers.iv, content: req.headers.content };
+  const authorization = req.headers.authorization;
+  const hash = getHash(authorization);
 
   const userId = decrypted(hash);
 
@@ -29,11 +32,14 @@ const createPost = async (req, res) => {
 };
 
 const getPosts = async (req, res) => {
-  const hash = { iv: req.headers.iv, content: req.headers.content };
+  const authorization = req.headers.authorization;
+
+  const hash = getHash(authorization);
 
   const userId = decrypted(hash);
 
   const posts = await postModel.find({ user: userId });
+  console.log("Number of post:",posts.length);
 
   try {
     res.status(200).json(posts);
@@ -45,7 +51,8 @@ const getPosts = async (req, res) => {
 const getApost = async (req, res) => {
   const { id } = req.params;
 
-  const hash = { iv: req.headers.iv, content: req.headers.content };
+  const authorization = req.headers.authorization;
+  const hash = getHash(authorization);
 
   const userId = decrypted(hash);
 
@@ -68,7 +75,8 @@ const editPost = async (req, res) => {
   const { id } = req.params;
 
   const body = req.body;
-  const hash = { iv: req.headers.iv, content: req.headers.content };
+  const authorization = req.headers.authorization;
+  const hash = getHash(authorization);
 
   const userId = decrypted(hash);
 
@@ -89,18 +97,19 @@ const editPost = async (req, res) => {
 
 const deletePost = async (req, res) => {
   const { id } = req.params;
-  const hash = { iv: req.headers.iv, content: req.headers.content };
+  const authorization = req.headers.authorization;
+  const hash = getHash(authorization);
 
   const userId = decrypted(hash);
   const post = await postModel.findById(id);
   if (userId == post.user) {
-      await postModel.findByIdAndDelete(id);
-    
-      try {
-        res.status(200).json({ message: `The post ${id} is deleted` });
-      } catch (error) {
-        res.status(404).json({ message: error.message });
-      }
+    await postModel.findByIdAndDelete(id);
+
+    try {
+      res.status(200).json({ message: `The post ${id} is deleted` });
+    } catch (error) {
+      res.status(404).json({ message: error.message });
+    }
   } else {
     res
       .status(409)

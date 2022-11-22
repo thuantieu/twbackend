@@ -1,4 +1,5 @@
 const userModel = require("../models/user.model");
+const jwt = require('jsonwebtoken')
 const { createhashed, comparepass } = require("../plugins/createhash");
 const { encrypted } = require("../plugins/cryptography");
 
@@ -33,13 +34,14 @@ const login = async (req, res) => {
     const passCompare = await comparepass(password, username.password);
     if (passCompare) {
       const id = username._id;
-      const token = encrypted(id.toString());
+      const idEncrypt = encrypted(id.toString());
+      const token =  jwt.sign(idEncrypt, process.env.SECRET_KEY)
+
       res
         .status(201)
         .json({
           message: "the user is logged in!",
-          iv: token.iv,
-          content: token.content,
+          token: token
         });
     } else {
       res.status(409).json({ message: "Password is wrong!" });

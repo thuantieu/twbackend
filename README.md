@@ -1,6 +1,6 @@
 # TW Social Backend side
 
-## How to test the code
+## How to run this app
 implement the following commands:
 
 ```
