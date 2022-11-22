@@ -31,7 +31,8 @@ const decrypted = (hash) => {
     decipher.final(),
   ]);
 
-  return decrpyted.toString();
+  return decrpyted.toString()
+
 };
 
 // const { privateKey, publicKey } = crypto.generateKeyPairSync("rsa", {

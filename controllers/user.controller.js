@@ -1,5 +1,4 @@
 const userModel = require("../models/user.model");
-const jwt = require("jsonwebtoken");
 const { createhashed, comparepass } = require("../plugins/createhash");
 const { encrypted } = require("../plugins/cryptography");
 
@@ -19,9 +18,7 @@ const createUser = async (req, res) => {
     });
     try {
       await newUser.save();
-      res
-        .status(201)
-        .json(`The new user which names ${newUser.name} is created!`);
+      res.status(201).json(`A new user with name ${newUser.name} is created!`);
     } catch (error) {
       res.status(409).json({ message: error.message });
     }
@@ -37,12 +34,12 @@ const login = async (req, res) => {
     if (passCompare) {
       const id = username._id;
       const token = encrypted(id.toString());
-      res.status(200).json({ message: "the user is logged in!", token: token });
+      res.status(201).json({ message: "the user is logged in!", token: token });
     } else {
-      res.status(404).json({ message: "Password is wrong!" });
+      res.status(409).json({ message: "Password is wrong!" });
     }
   } else {
-    res.status(404).json({ message: "the user does not exist!" });
+    res.status(409).json({ message: "the user does not exist!" });
   }
 };
 
