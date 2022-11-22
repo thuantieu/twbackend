@@ -89,12 +89,22 @@ const editPost = async (req, res) => {
 
 const deletePost = async (req, res) => {
   const { id } = req.params;
-  await postModel.findByIdAndDelete(id);
+  const hash = { iv: req.headers.iv, content: req.headers.content };
 
-  try {
-    res.status(200).json({ message: `The post ${id} is deleted` });
-  } catch (error) {
-    res.status(404).json({ message: error.message });
+  const userId = decrypted(hash);
+  const post = await postModel.findById(id);
+  if (userId == post.user) {
+      await postModel.findByIdAndDelete(id);
+    
+      try {
+        res.status(200).json({ message: `The post ${id} is deleted` });
+      } catch (error) {
+        res.status(404).json({ message: error.message });
+      }
+  } else {
+    res
+      .status(409)
+      .json({ message: "Your request is not allow for unauthentication!" });
   }
 };
 module.exports = { createPost, getPosts, editPost, getApost, deletePost };

@@ -34,7 +34,13 @@ const login = async (req, res) => {
     if (passCompare) {
       const id = username._id;
       const token = encrypted(id.toString());
-      res.status(201).json({ message: "the user is logged in!", token: token });
+      res
+        .status(201)
+        .json({
+          message: "the user is logged in!",
+          iv: token.iv,
+          content: token.content,
+        });
     } else {
       res.status(409).json({ message: "Password is wrong!" });
     }
