@@ -1,5 +1,8 @@
 const mongoose = require("mongoose");
 
+
+let todate = Date().toLocaleString();
+
 const postSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -9,6 +12,7 @@ const postSchema = new mongoose.Schema({
   content: {
     type: String,
     required: true,
+    default: "",
   },
   like: {
     type: Number,
@@ -27,9 +31,17 @@ const postSchema = new mongoose.Schema({
     default: ''
   },
   user: {
-    type: String,
+    type: {},
     require: true,
   },
+  status: {
+    type: String,
+    default: 'public'
+  },
+  createdDate: {
+    type: String,
+    default: todate
+  }
 });
 
 

@@ -14,8 +14,8 @@ const userSchema = new mongoose.Schema({
   },
   mobile: {
     type: String,
-    required: true,
     unique: true,
+    default: ''
   },
   password: {
     type: String,
@@ -26,6 +26,14 @@ const userSchema = new mongoose.Schema({
     require: true,
     default: "",
   },
+  friend: {
+    type: [],
+    default: []
+  },
+  message: {
+    type: [],
+    default: []
+  }
 });
 
 //Export the model
