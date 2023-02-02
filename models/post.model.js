@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 
-let todate = Date().toLocaleString();
+let todate = Date()
 
 const postSchema = new mongoose.Schema({
   title: {
@@ -39,7 +39,7 @@ const postSchema = new mongoose.Schema({
     default: 'public'
   },
   createdDate: {
-    type: String,
+    type: Date,
     default: todate
   }
 });
