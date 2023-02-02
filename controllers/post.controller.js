@@ -18,9 +18,10 @@ const createPost = async (req, res) => {
 
     if (userId) {
       const user = await userModel.findById(userId)
+      const posts = await postModel.find()
       const newPost = new postModel({
         ...body,
-        postCount: user.length + 1,
+        postCount: Number(posts.length) + 1,
         user: {
           id: user._id,
           name: user.name
