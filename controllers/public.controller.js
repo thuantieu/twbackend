@@ -2,7 +2,7 @@ const postModel = require("../models/post.model");
 
 const getAllPublicPosts = async (req, res) => {
   // let posts = null;
-  const posts = await postModel.find({ status: "public" }).sort({"createdDate": -1});
+  const posts = await postModel.find({ status: "public" }).sort({"createdDate": 1});
 
   try {
     res.status(200).json(posts);
