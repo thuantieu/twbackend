@@ -41,6 +41,9 @@ const postSchema = new mongoose.Schema({
   createdDate: {
     type: Date,
     default: todate
+  },
+  postCount: {
+    type: Number
   }
 });
 
